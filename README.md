@@ -2,8 +2,7 @@
 
 **Author:** OBI IKECHUKWU
 **Student ID:** 23CE034397
-**Course:** [Your Course Name, e.g., "Advanced Python Project"]
-**University:** [Your University Name, e.g., "Covenant University"]
+**Program:** Computer Science
 
 ---
 
