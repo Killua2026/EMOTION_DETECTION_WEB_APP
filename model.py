@@ -31,7 +31,7 @@ def analyze_emotion(image_path):
         analysis_results = DeepFace.analyze(
             img_path=image_path,
             actions=['emotion'],
-            detector_backend='retinaface',  # This is fine to use
+            detector_backend='opencv',  # This is fine to use
             enforce_detection=False  # Don't crash if no face is found
         )
         
