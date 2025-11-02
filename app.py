@@ -12,23 +12,13 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # --- Database Configuration ---
-# Set the data directory path (Render provides this as an environment variable)
-DATA_DIR = os.environ.get('RENDER_DATA_DIR', os.getcwd()) 
-DB_PATH = os.path.join(DATA_DIR, 'database.db')
-
-# Update the database URI to use the new path
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
-
-# Configure a folder to store user uploads
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
-# Initialize the database
+DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///database.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['UPLOAD_FOLDER'] = 'static/uploads' # We will create this folder
 db = SQLAlchemy(app)
 
 # --- Database Model Definition ---
 class Log(db.Model):
-    """
-    This class defines the database table for logging analyses.
-    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     image_filename = db.Column(db.String(200), nullable=False)
@@ -36,6 +26,30 @@ class Log(db.Model):
 
     def __repr__(self):
         return f'<Log {self.id}: {self.name} - {self.result}>'
+
+# -----------------------------------------------------------------
+# --- THIS IS THE FIX ---
+# We move the setup code here, to the top level of the script.
+# This code will now run when Render starts, BEFORE any web requests.
+# -----------------------------------------------------------------
+logging.info("Checking for upload directory and database tables...")
+
+# 1. Create the upload folder if it doesn't exist
+upload_dir = app.config['UPLOAD_FOLDER']
+if not os.path.exists(upload_dir):
+    os.makedirs(upload_dir)
+    logging.info(f"Created directory: {upload_dir}")
+
+# 2. Create the database tables
+# We need to be in an 'app_context' to do database operations
+with app.app_context():
+    db.create_all()
+    logging.info("Database tables checked/created.")
+
+logging.info("Application setup complete. Starting web routes.")
+# -----------------------------------------------------------------
+# --- END OF FIX ---
+# -----------------------------------------------------------------
 
 
 # --- Web Routes ---
@@ -58,7 +72,7 @@ def analyze():
         return redirect(request.url)
         
     file = request.files['image_file']
-    user_name = request.form.get('user_name', 'Anonymous') # Get name, default to 'Anonymous'
+    user_name = request.form.get('user_name', 'Anonymous') 
 
     if file.filename == '':
         logging.warning("No selected file")
@@ -87,27 +101,17 @@ def analyze():
             logging.info(f"Saved analysis to database for user: {user_name}")
         except Exception as e:
             logging.error(f"Error saving to database: {e}")
-            # Don't stop the user if DB fails, just log it
             db.session.rollback() 
 
         # 5. Render the result page
         return render_template('result.html', 
                                emotion_result=dominant_emotion,
-                               # We pass the path relative to the 'static' folder
                                image_filename=f'uploads/{filename}')
             
     return "An unexpected error occurred."
 
 
-# --- Run the App ---
+# --- Run the App (for local testing) ---
 if __name__ == '__main__':
-    # Create the 'static/uploads' folder if it doesn't exist
-    upload_dir = app.config['UPLOAD_FOLDER']
-    if not os.path.exists(upload_dir):
-        os.makedirs(upload_dir)
-        
-    # Create the database tables if they don't exist
-    with app.app_context():
-        db.create_all()
-        
+    # This block is now only for running the app locally
     app.run(debug=True)
