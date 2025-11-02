@@ -111,6 +111,28 @@ def analyze():
     return "An unexpected error occurred."
 
 
+# -----------------------------------------------------------------
+# --- NEW PAGE FOR VIEWING LOGS ---
+# -----------------------------------------------------------------
+@app.route('/view-logs-secret')
+def view_logs():
+    """
+    A secret page to view all database logs.
+    """
+    try:
+        # Query the database to get all log entries, ordered by newest first
+        all_logs = Log.query.order_by(Log.id.desc()).all()
+        
+        # Pass the log data to a new HTML template
+        return render_template('logs.html', logs=all_logs)
+    
+    except Exception as e:
+        return f"An error occurred trying to read the database: {e}"
+# -----------------------------------------------------------------
+# --- END OF NEW PAGE ---
+# -----------------------------------------------------------------
+
+
 # --- Run the App (for local testing) ---
 if __name__ == '__main__':
     # This block is now only for running the app locally
