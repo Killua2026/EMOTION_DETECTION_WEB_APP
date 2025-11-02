@@ -12,8 +12,13 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # --- Database Configuration ---
-# Set the path for the SQLite database file
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# Set the data directory path (Render provides this as an environment variable)
+DATA_DIR = os.environ.get('RENDER_DATA_DIR', os.getcwd()) 
+DB_PATH = os.path.join(DATA_DIR, 'database.db')
+
+# Update the database URI to use the new path
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
+
 # Configure a folder to store user uploads
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 # Initialize the database
