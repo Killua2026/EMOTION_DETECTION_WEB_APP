@@ -1,0 +1,13 @@
+We're to create an AI model that detects a human’s emotion, either from an image or from a live capture of a person.
+Folder Structure:
+Root folder: 
+# Name: STUDENTS-SURNAME_MAT.NO_EMOTION_DETECTION_WEB_APP (Student’s Surname all in caps, and the ‘EMOTION_DETECTION_WEB_APP’ is optional but to be safe …)
+# Contents: 
+•	app.py – the backend of your web app
+•	model.py – the script containing the code used to train model 
+•	Folder named ‘templates’ – containing the html file for your web app
+•	Folder named ‘static’ (optional) - containing the css file for styling your web app (optional oo)
+•	Requirements.txt – a text file containing the required libraries and modules and packages, required by your to run
+•	link_to_my_web_app.txt – a text file containing the hosting link to your web app (it should be in the format: name_of_hosting_platform – then_the_link)
+•	a database, name – your choice – this contains names of people that used your app, offline and online, the image, and the result of the model’s evaluation
+•	then the trained model should also be in this file, the name, be creative, the file extension, it varies.

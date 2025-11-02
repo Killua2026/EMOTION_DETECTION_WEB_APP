@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emotion Detector</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        h1 { color: #333; }
+        form { margin-top: 30px; border: 1px solid #ccc; padding: 20px; display: inline-block; }
+        input { display: block; margin: 10px auto; }
+        input[type="submit"] { padding: 10px 20px; font-size: 16px; background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Upload an Image to Detect Emotion</h1>
+    
+    <form action="/analyze" method="POST" enctype="multipart/form-data">
+        <label for="user_name">Your Name:</label>
+        <input type="text" id="user_name" name="user_name" placeholder="Enter your name" required>
+        
+        <label for="image_file">Upload Image:</label>
+        <input type="file" id="image_file" name="image_file" accept="image/*" required>
+        
+        <input type="submit" value="Analyze Emotion">
+    </form>
+</body>
+</html>
