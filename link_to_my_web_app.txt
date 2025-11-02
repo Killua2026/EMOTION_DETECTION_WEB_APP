@@ -1,1 +1,5 @@
+Link to my web app: 
 https://emotion-detection-app-htbi.onrender.com
+
+Link to view the DB of those who logged in:
+ https://emotion-detection-app-htbi.onrender.com/view-logs-secret 
