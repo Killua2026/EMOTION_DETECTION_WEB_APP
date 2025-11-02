@@ -1,7 +1,7 @@
 #First, you need to install the deepface library using this command on your terminal:
 # python -m pip install deepface
 
-from deepface import DeepFace
+# We REMOVED 'from deepface import DeepFace' from here.
 import logging
 
 # Set up logging
@@ -17,6 +17,13 @@ def analyze_emotion(image_path):
     Returns:
         str: The dominant emotion, or an error message.
     """
+    
+    # --- THIS IS THE FIX ---
+    # We moved the import statement HERE, inside the function.
+    # Now, DeepFace (and TensorFlow) will only load when 
+    # this function is called, not when the app starts.
+    from deepface import DeepFace
+    
     try:
         logging.info(f"Analyzing image at: {image_path}")
         
@@ -24,7 +31,7 @@ def analyze_emotion(image_path):
         analysis_results = DeepFace.analyze(
             img_path=image_path,
             actions=['emotion'],
-            detector_backend='retinaface',  
+            detector_backend='retinaface',  # This is fine to use
             enforce_detection=False  # Don't crash if no face is found
         )
         
